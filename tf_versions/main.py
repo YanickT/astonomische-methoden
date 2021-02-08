@@ -37,10 +37,10 @@ plt.plot(list(range(len(mae))), mae)
 plt.show()
 
 preds = net.predict(test_in).flatten()
-test = np.isclose(preds, test_out, rtol=0.2)
-trues = np.count_nonzero(test)
-false = test.shape[0] - trues
-print(f"True: {trues}, False: {false}")
+diff = np.abs(preds - test_out)
+avg_diff = np.mean(diff)
+avg_error = np.std(diff, ddof=1)
+print(f"Uncertainty: {avg_diff}±{avg_error}")
 
 
 # only quasar
@@ -53,7 +53,7 @@ plt.plot(list(range(len(mae))), mae)
 plt.show()
 
 preds = net.predict(test_in).flatten()
-test = np.isclose(preds, test_out, rtol=0.2)
-trues = np.count_nonzero(test)
-false = test.shape[0] - trues
-print(f"True: {trues}, False: {false}")
+diff = np.abs(preds - test_out)
+avg_diff = np.mean(diff)
+avg_error = np.std(diff, ddof=1)
+print(f"Uncertainty: {avg_diff}±{avg_error}")
