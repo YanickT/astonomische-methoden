@@ -4,8 +4,8 @@ import tensorflow.keras.backend as kb
 
 
 def squared_relative_loss(y_actual,y_pred):
-    loss = kb.square(y_actual-y_pred)
-    loss /= y_actual
+    loss = kb.square((y_actual-y_pred) / y_actual)
+    #loss /= y_actual
     return loss
 
 
