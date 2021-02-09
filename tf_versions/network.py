@@ -22,10 +22,11 @@ class Network:
             # scale brightness
             keras.layers.Dense(5, activation=tf.nn.leaky_relu),
             # calculate stuff
-            keras.layers.Dense(15, activation=tf.nn.sigmoid, kernel_regularizer=keras.regularizers.l2(l=0.1)),
-            keras.layers.Dense(20, activation=tf.nn.sigmoid, kernel_regularizer=keras.regularizers.l2(l=0.1)),
-            keras.layers.Dense(15, activation=tf.nn.sigmoid, kernel_regularizer=keras.regularizers.l2(l=0.1)),
+            keras.layers.Dense(15, activation=tf.nn.sigmoid),
+            keras.layers.Dense(20, activation=tf.nn.sigmoid),
+            keras.layers.Dense(15, activation=tf.nn.sigmoid),
             keras.layers.Dense(1, activation=tf.nn.sigmoid)
+            # , kernel_regularizer=keras.regularizers.l2(l=0.1)
         ])
 
         self.model.compile(optimizer='adam', loss=squared_relative_loss,

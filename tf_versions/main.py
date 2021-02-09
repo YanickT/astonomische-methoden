@@ -3,6 +3,9 @@ import matplotlib.pyplot as plt
 from astroquery.sdss import SDSS
 from network import Network
 
+import pyrror.table as pt
+import pyrror.regression as pr
+
 
 def get_data(class_, n_train=1000, n_test=1000):
     """
@@ -40,10 +43,13 @@ def redshift_error_plot(net, test_in, test_out):
     pairs.sort(key=lambda x: x[1])
     ys, xs = tuple(zip(*pairs))
     plt.plot(xs, ys, ".")
+    plt.xlabel("redshift")
+    plt.ylabel("error")
+    # plt.savefig("valloss(redshift).png")
     plt.show()
 
 # only galaxy
-if False:
+if True:
     train_in, train_out, test_in, test_out = get_data("GALAXY", 3000, 1000)
     net = Network()
     history = net.train(train_in, train_out, val_in=test_in, val_out=test_out, epochs=20, verbose=0)
@@ -51,21 +57,61 @@ if False:
     # plot loss of test data
     val_loss = history.history["val_loss"]
     plt.plot(list(range(len(val_loss))), val_loss)
+    plt.xlabel("epochs")
+    plt.ylabel("validation loss")
+    plt.savefig("valloss(epochs).png")
+    plt.show()
+    redshift_error_plot(net, test_in, test_out)
+
+    tab = pt.Table(column_names=["redshift", "loss"], columns=2)
+    preds = net.predict(test_in).flatten()
+    diff = np.abs(preds - test_out)
+    pairs = list(zip(diff.tolist(), test_out.tolist()))
+    pairs.sort(key=lambda x: x[1])
+    ys, xs = tuple(zip(*pairs))
+
+    # remove first part of the data
+    min_index = np.argmin(np.array(ys))
+    print(min_index)
+    test_out = xs[min_index:]
+    test_in = ys[min_index:]
+
+    for redshift, loss in zip(test_out, test_in):
+        tab.add((redshift, loss))
+
+
+
+if False:
+    # only quasar
+    train_in, train_out, test_in, test_out = get_data("QSO", 8000, 2000)
+    net = Network()
+    history = net.train(train_in, train_out, val_in=test_in, val_out=test_out, epochs=15, verbose=0)
+
+    # plot loss of test data
+    val_loss = history.history["val_loss"]
+    plt.xlabel("epochs")
+    plt.ylabel("validation loss")
+    # plt.savefig("valloss(epochs).png")
+    plt.plot(list(range(len(val_loss))), val_loss)
     plt.show()
 
     redshift_error_plot(net, test_in, test_out)
 
+    tab = pt.Table(column_names=["redshift", "loss"], columns=2)
+    preds = net.predict(test_in).flatten()
+    diff = np.abs(preds - test_out)
+    pairs = list(zip(diff.tolist(), test_out.tolist()))
+    pairs.sort(key=lambda x: x[1])
+    ys, xs = tuple(zip(*pairs))
 
-# only quasar
-train_in, train_out, test_in, test_out = get_data("QSO", 8000, 2000)
-net = Network()
-history = net.train(train_in, train_out, val_in=test_in, val_out=test_out, epochs=10, verbose=0)
+    # remove first part of the data
+    min_index = np.argmin(np.array(ys))
+    print(min_index)
+    test_out = xs[min_index:]
+    test_in = ys[min_index:]
 
-# plot loss of test data
-val_loss = history.history["val_loss"]
-plt.plot(list(range(len(val_loss))), val_loss)
-plt.show()
+    for redshift, loss in zip(test_out, test_in):
+        tab.add((redshift, loss))
 
-redshift_error_plot(net, test_in, test_out)
 
 
