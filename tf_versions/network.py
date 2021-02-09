@@ -1,5 +1,12 @@
 import tensorflow as tf
 from tensorflow import keras
+import tensorflow.keras.backend as kb
+
+
+def squared_relative_loss(y_actual,y_pred):
+    loss = kb.square(y_actual-y_pred)
+    loss /= y_actual
+    return loss
 
 
 class Network:
@@ -22,8 +29,9 @@ class Network:
             keras.layers.Dense(1, activation=tf.nn.sigmoid)
         ])
 
-        self.model.compile(optimizer='adam', loss=tf.keras.losses.MeanSquaredError(),
-                           metrics=[tf.keras.metrics.MeanAbsoluteError()])
+        self.model.compile(optimizer='adam', loss=squared_relative_loss,
+                           metrics=[tf.keras.metrics.MeanAbsoluteError(),
+                                    tf.keras.metrics.MeanAbsolutePercentageError()])
 
     def train(self, input_data, output_data, epochs=5):
         """

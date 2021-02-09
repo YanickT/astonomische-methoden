@@ -6,7 +6,6 @@ from network import Network
 
 def get_data(class_, n_train=1000, n_test=1000):
     """
-    WHY THE HECK DO I GET AN ERROR IF I DO NOT SELECT specobj.ra???
     Load data for training and evaluation.
     :param class_: str = Type of astronomical objects
     :param n_train: int = Number of traingings data
@@ -29,6 +28,7 @@ def get_data(class_, n_train=1000, n_test=1000):
 
 # only galaxy
 train_in, train_out, test_in, test_out = get_data("GALAXY", 3000, 1000)
+print(test_out)
 net = Network()
 history = net.train(train_in, train_out, 25)
 mae = history.history["mean_absolute_error"]
@@ -38,13 +38,20 @@ plt.show()
 
 preds = net.predict(test_in).flatten()
 diff = np.abs(preds - test_out)
+pairs = list(zip(diff.tolist(), test_out.tolist()))
+pairs.sort(key=lambda x: x[1])
+ys, xs = tuple(zip(*pairs))
+
+plt.plot(xs, ys, "x-")
+plt.show()
+
 avg_diff = np.mean(diff)
 avg_error = np.std(diff, ddof=1)
 print(f"Uncertainty: {avg_diff}±{avg_error}")
 
 
 # only quasar
-train_in, train_out, test_in, test_out = get_data("QSO", 3000, 1000)
+train_in, train_out, test_in, test_out = get_data("QSO", 8000, 2000)
 net = Network()
 history = net.train(train_in, train_out, 25)
 mae = history.history["mean_absolute_error"]
