@@ -12,7 +12,7 @@ def squared_relative_loss(y_actual,y_pred):
 class Network:
 
     """
-    Simple neural network for the identification of letters in images.
+    Simple neural network for the estimation of the redshift for astronomical objects (quasar and galaxies)
     """
 
     def __init__(self):
