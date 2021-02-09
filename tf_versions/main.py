@@ -26,51 +26,46 @@ def get_data(class_, n_train=1000, n_test=1000):
     return train_ins, train_out, test_ins, test_out
 
 
+def redshift_error_plot(net, test_in, test_out):
+    """
+    Create plot of the uncertainty over the redshift.
+    :param net: Network = Network to use
+    :param test_in: np.array[5, n] = List of input data to test
+    :param test_out: np.array[n] = List of output data to test
+    :return: void
+    """
+    preds = net.predict(test_in).flatten()
+    diff = np.abs(preds - test_out)
+    pairs = list(zip(diff.tolist(), test_out.tolist()))
+    pairs.sort(key=lambda x: x[1])
+    ys, xs = tuple(zip(*pairs))
+    plt.plot(xs, ys, ".")
+    plt.show()
+
 # only galaxy
-train_in, train_out, test_in, test_out = get_data("GALAXY", 3000, 1000)
-print(test_out)
-net = Network()
-history = net.train(train_in, train_out, 25)
-mae = history.history["mean_absolute_error"]
+if False:
+    train_in, train_out, test_in, test_out = get_data("GALAXY", 3000, 1000)
+    net = Network()
+    history = net.train(train_in, train_out, val_in=test_in, val_out=test_out, epochs=20, verbose=0)
 
-plt.plot(list(range(len(mae))), mae)
-plt.show()
+    # plot loss of test data
+    val_loss = history.history["val_loss"]
+    plt.plot(list(range(len(val_loss))), val_loss)
+    plt.show()
 
-preds = net.predict(test_in).flatten()
-diff = np.abs(preds - test_out)
-pairs = list(zip(diff.tolist(), test_out.tolist()))
-pairs.sort(key=lambda x: x[1])
-ys, xs = tuple(zip(*pairs))
-
-plt.plot(xs, ys, "x-")
-plt.show()
-
-avg_diff = np.mean(diff)
-avg_error = np.std(diff, ddof=1)
-print(f"Uncertainty: {avg_diff}±{avg_error}")
+    redshift_error_plot(net, test_in, test_out)
 
 
 # only quasar
 train_in, train_out, test_in, test_out = get_data("QSO", 8000, 2000)
 net = Network()
-history = net.train(train_in, train_out, 25)
-mae = history.history["mean_absolute_error"]
+history = net.train(train_in, train_out, val_in=test_in, val_out=test_out, epochs=60, verbose=0)
 
-plt.plot(list(range(len(mae))), mae)
+# plot loss of test data
+val_loss = history.history["val_loss"]
+plt.plot(list(range(len(val_loss))), val_loss)
 plt.show()
 
-preds = net.predict(test_in).flatten()
+redshift_error_plot(net, test_in, test_out)
 
-preds = net.predict(test_in).flatten()
-diff = np.abs(preds - test_out)
-pairs = list(zip(diff.tolist(), test_out.tolist()))
-pairs.sort(key=lambda x: x[1])
-ys, xs = tuple(zip(*pairs))
 
-plt.plot(xs, ys, "x-")
-plt.show()
-
-diff = np.abs(preds - test_out)
-avg_diff = np.mean(diff)
-avg_error = np.std(diff, ddof=1)
-print(f"Uncertainty: {avg_diff}±{avg_error}")
