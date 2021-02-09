@@ -59,7 +59,7 @@ if False:
 # only quasar
 train_in, train_out, test_in, test_out = get_data("QSO", 8000, 2000)
 net = Network()
-history = net.train(train_in, train_out, val_in=test_in, val_out=test_out, epochs=60, verbose=0)
+history = net.train(train_in, train_out, val_in=test_in, val_out=test_out, epochs=10, verbose=0)
 
 # plot loss of test data
 val_loss = history.history["val_loss"]
