@@ -60,6 +60,16 @@ plt.plot(list(range(len(mae))), mae)
 plt.show()
 
 preds = net.predict(test_in).flatten()
+
+preds = net.predict(test_in).flatten()
+diff = np.abs(preds - test_out)
+pairs = list(zip(diff.tolist(), test_out.tolist()))
+pairs.sort(key=lambda x: x[1])
+ys, xs = tuple(zip(*pairs))
+
+plt.plot(xs, ys, "x-")
+plt.show()
+
 diff = np.abs(preds - test_out)
 avg_diff = np.mean(diff)
 avg_error = np.std(diff, ddof=1)
