@@ -4,6 +4,12 @@ import tensorflow.keras.backend as kb
 
 
 def squared_relative_loss(y_actual,y_pred):
+    """
+    Calculates the relative squared error. This should cause a constant relative uncertainty in the predictions.
+    :param y_actual: np.array[1] = Correct output data
+    :param y_pred: np.array[1] = Predicted output data
+    :return: np.array[1] = loss
+    """
     loss = kb.square((y_actual-y_pred) / y_actual)
     return loss
 
@@ -22,11 +28,10 @@ class Network:
             # scale brightness
             keras.layers.Dense(5, activation=tf.nn.leaky_relu),
             # calculate stuff
-            keras.layers.Dense(15, activation=tf.nn.sigmoid),
-            keras.layers.Dense(20, activation=tf.nn.sigmoid),
-            keras.layers.Dense(15, activation=tf.nn.sigmoid),
+            keras.layers.Dense(15, activation=tf.nn.sigmoid, kernel_regularizer=keras.regularizers.l2(l=0.1)),
+            keras.layers.Dense(20, activation=tf.nn.sigmoid, kernel_regularizer=keras.regularizers.l2(l=0.1)),
+            keras.layers.Dense(15, activation=tf.nn.sigmoid, kernel_regularizer=keras.regularizers.l2(l=0.1)),
             keras.layers.Dense(1, activation=tf.nn.sigmoid)
-            # , kernel_regularizer=keras.regularizers.l2(l=0.1)
         ])
 
         self.model.compile(optimizer='adam', loss=squared_relative_loss,
@@ -43,7 +48,8 @@ class Network:
         :return: history of training
         """
         if val_in is not None and val_out is not None:
-            return self.model.fit(input_data, output_data, validation_data=(val_in, val_out), epochs=epochs, **kwargs)
+            return self.model.fit(input_data, output_data, validation_data=(val_in, val_out), epochs=epochs,
+                                  callbacks=[keras.callbacks.EarlyStopping(monitor="val_loss", patience=2)], **kwargs)
         else:
             return self.model.fit(input_data, output_data, epochs=epochs, **kwargs)
 

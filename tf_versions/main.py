@@ -49,10 +49,11 @@ def redshift_error_plot(net, test_in, test_out):
     plt.show()
 
 # only galaxy
-if True:
+if False:
     train_in, train_out, test_in, test_out = get_data("GALAXY", 3000, 1000)
     net = Network()
     history = net.train(train_in, train_out, val_in=test_in, val_out=test_out, epochs=20, verbose=0)
+    # net.model.save("galaxies.h5")
 
     # plot loss of test data
     val_loss = history.history["val_loss"]
@@ -63,7 +64,8 @@ if True:
     plt.show()
     redshift_error_plot(net, test_in, test_out)
 
-    tab = pt.Table(column_names=["redshift", "loss"], columns=2)
+    # Preperation for linear regression
+    tab = pt.Table(column_names=["redshift", "relative uncertainty/loss"], columns=2)
     preds = net.predict(test_in).flatten()
     diff = np.abs(preds - test_out)
     pairs = list(zip(diff.tolist(), test_out.tolist()))
@@ -79,13 +81,20 @@ if True:
     for redshift, loss in zip(test_out, test_in):
         tab.add((redshift, loss))
 
+    reg = pr.SimpleRegression(tab, {'x': 0, 'y': 1})
+    print(reg)
+    reg.plot()
+    reg.residues()
 
 
-if False:
+
+if True:
     # only quasar
     train_in, train_out, test_in, test_out = get_data("QSO", 8000, 2000)
     net = Network()
+    # 15
     history = net.train(train_in, train_out, val_in=test_in, val_out=test_out, epochs=15, verbose=0)
+    net.model.save("quasar.h5")
 
     # plot loss of test data
     val_loss = history.history["val_loss"]
@@ -98,6 +107,8 @@ if False:
     redshift_error_plot(net, test_in, test_out)
 
     tab = pt.Table(column_names=["redshift", "loss"], columns=2)
+    tab2 = pt.Table(column_names=["redshift", "loss"], columns=2)
+
     preds = net.predict(test_in).flatten()
     diff = np.abs(preds - test_out)
     pairs = list(zip(diff.tolist(), test_out.tolist()))
@@ -112,6 +123,10 @@ if False:
 
     for redshift, loss in zip(test_out, test_in):
         tab.add((redshift, loss))
+
+    reg = pr.SimpleRegression(tab, {'x': 0, 'y': 1})
+    reg.plot()
+    reg.residues()
 
 
 
