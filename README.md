@@ -22,6 +22,5 @@ Since the influence in the galaxy network was neglectable it will be ignored for
 
 
 ## Loss
-The relative uncertainty was chosen as loss. 
+The relative squared error was chosen as loss. 
 This should cause the relative uncertainty to stay constant over the redshift.
-The loss is the squared fraction of absolute loss divided by the redshift (real not predicted).
