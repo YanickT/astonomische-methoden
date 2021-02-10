@@ -45,11 +45,34 @@ def redshift_error_plot(net, test_in, test_out):
     plt.plot(xs, ys, ".")
     plt.xlabel("redshift")
     plt.ylabel("error")
-    # plt.savefig("valloss(redshift).png")
     plt.show()
 
+
+def get_reg(net, test_in, test_out):
+    preds = net.predict(test_in).flatten()
+    diff = np.abs(preds - test_out)
+    pairs = list(zip(diff.tolist(), test_out.tolist()))
+    pairs.sort(key=lambda x: x[1])
+    ys, xs = tuple(zip(*pairs))
+
+    # prepare table for regression
+    tab = pt.Table(column_names=["redshift", "loss"], columns=2)
+
+    # remove first part of the data
+    min_index = np.argmin(np.array(ys))
+    test_out = xs[min_index:]
+    test_in = ys[min_index:]
+
+    for redshift, loss in zip(test_out, test_in):
+        tab.add((redshift, loss))
+
+    # perform regression and plot results
+    reg = pr.SimpleRegression(tab, {'x': 0, 'y': 1})
+    return reg
+
+
 # only galaxy
-if False:
+if True:
     train_in, train_out, test_in, test_out = get_data("GALAXY", 3000, 1000)
     net = Network()
     history = net.train(train_in, train_out, val_in=test_in, val_out=test_out, epochs=20, verbose=0)
@@ -60,73 +83,38 @@ if False:
     plt.plot(list(range(len(val_loss))), val_loss)
     plt.xlabel("epochs")
     plt.ylabel("validation loss")
-    plt.savefig("valloss(epochs).png")
     plt.show()
+
+    # plot loss of test data over redshift
     redshift_error_plot(net, test_in, test_out)
 
-    # Preperation for linear regression
-    tab = pt.Table(column_names=["redshift", "relative uncertainty/loss"], columns=2)
-    preds = net.predict(test_in).flatten()
-    diff = np.abs(preds - test_out)
-    pairs = list(zip(diff.tolist(), test_out.tolist()))
-    pairs.sort(key=lambda x: x[1])
-    ys, xs = tuple(zip(*pairs))
-
-    # remove first part of the data
-    min_index = np.argmin(np.array(ys))
-    print(min_index)
-    test_out = xs[min_index:]
-    test_in = ys[min_index:]
-
-    for redshift, loss in zip(test_out, test_in):
-        tab.add((redshift, loss))
-
-    reg = pr.SimpleRegression(tab, {'x': 0, 'y': 1})
-    print(reg)
+    # plot regression over linear part of loss(redshift)
+    reg = get_reg(net, test_in, test_out)
     reg.plot()
     reg.residues()
 
 
-
+# only quasar
 if True:
-    # only quasar
+    """
+    Use with regularization in Network
+    """
     train_in, train_out, test_in, test_out = get_data("QSO", 8000, 2000)
     net = Network()
-    # 15
     history = net.train(train_in, train_out, val_in=test_in, val_out=test_out, epochs=15, verbose=0)
-    net.model.save("quasar.h5")
+    # net.model.save("quasar.h5")
 
-    # plot loss of test data
+    # plot loss of test data over the epochs
     val_loss = history.history["val_loss"]
     plt.xlabel("epochs")
     plt.ylabel("validation loss")
-    # plt.savefig("valloss(epochs).png")
     plt.plot(list(range(len(val_loss))), val_loss)
     plt.show()
 
+    # plot loss of test data over redshift
     redshift_error_plot(net, test_in, test_out)
 
-    tab = pt.Table(column_names=["redshift", "loss"], columns=2)
-    tab2 = pt.Table(column_names=["redshift", "loss"], columns=2)
-
-    preds = net.predict(test_in).flatten()
-    diff = np.abs(preds - test_out)
-    pairs = list(zip(diff.tolist(), test_out.tolist()))
-    pairs.sort(key=lambda x: x[1])
-    ys, xs = tuple(zip(*pairs))
-
-    # remove first part of the data
-    min_index = np.argmin(np.array(ys))
-    print(min_index)
-    test_out = xs[min_index:]
-    test_in = ys[min_index:]
-
-    for redshift, loss in zip(test_out, test_in):
-        tab.add((redshift, loss))
-
-    reg = pr.SimpleRegression(tab, {'x': 0, 'y': 1})
+    # plot regression over linear part of loss(redshift)
+    reg = get_reg(net, test_in, test_out)
     reg.plot()
     reg.residues()
-
-
-
