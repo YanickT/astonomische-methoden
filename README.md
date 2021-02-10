@@ -26,7 +26,7 @@ The relative squared error was chosen as loss.
 This should cause the relative uncertainty to stay constant over the redshift.
 
 
-## additional notes
+## Additional notes
 The residues of the quasar network (with regularization) clearly shows a structure.
 Since these are very small we expect this to be caused by very few data which are shifted away from the others. 
 But this may need further discussion.
