@@ -15,6 +15,16 @@ This results in a worse prediction for large redshifts.
 |Default| ![predicted redshift over real redshift](images/galaxies/default/prediction_redshift.png)|![predicted redshift over real redshift](images/quasars/default/prediction_redshift.png)| 
 |Modified| ![predicted redshift over real redshift](images/galaxies/modified/prediction_redshift.png)|![predicted redshift over real redshift](images/quasars/modified/prediction_redshift.png)| 
 
+The default network can be found in the python script. 
+
+The modified network has following changes applied to it.
+- The amount of training set is set to 30,000
+- The amount of validation sets is set to 3,000 (10% of training)
+- The maximum number of epochs was set to 1000, so that the networks terminates through the EarlyStopping
+- The L2 regularisation factor was set to 10<sup>-5</sup>
+- The learning rate of Adam was set to 5 * 10<sup>-5</sup>
+- The first and last layer have linear activation function
+
 
 ## Data
 The data used is from the Sloan Digital Sky Survey (SDSS) DR16. To obtain randomly sampled redshifts the data
