@@ -10,9 +10,10 @@ While the network shows for the galaxies at least a tendency do quasars perform 
 Since the amount of data for larger redshifts is smaller, the network trains these less. 
 This results in a worse prediction for large redshifts.
 
-| Galaxies | Quasars |
-|----------|---------|
-|![predicted redshift over real redshift](images/galaxies/prediction_redshift.png)|![predicted redshift over real redshift](images/quasars/prediction_redshift.png)| 
+| | Galaxies | Quasars |
+| |----------|---------|
+|Default|![predicted redshift over real redshift](images/galaxies/default/prediction_redshift.png)|![predicted redshift over real redshift](images/quasars/default/prediction_redshift.png)| 
+|Modified|![predicted redshift over real redshift](images/galaxies/modified/prediction_redshift.png)|![predicted redshift over real redshift](images/quasars/modified/prediction_redshift.png)| 
 
 
 
