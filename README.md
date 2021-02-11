@@ -1,12 +1,18 @@
 # Astonomische Methoden (astronomical methods)
-THE NETWORK DOES AT THE MOMENT NOT WORK
 
 This project was created as part of the lecture 'Astronomische Methoden'.
 The aim is to develop a simple neural network which predicts the redshift from the given bands.
 
 The data were accessed using `astroquery.sdss`.
 
-## Networks
+## Network
+While the network shows for the galaxies at least a tendency do quasars perform pretty bad.
+Since the amount of data for larger redshifts is smaller, the network trains these less. 
+This results in a worse prediction for large redshifts.
+
+| Galaxies | Quasars |
+|----------|---------|
+|![predicted redshift over real redshift](images/galaxies/prediction_redshift.png)|![predicted redshift over real redshift](images/quasars/prediction_redshift.png)| 
 
 
 

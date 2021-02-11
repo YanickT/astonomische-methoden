@@ -36,9 +36,7 @@ def redshift_error_plot(net, test_in, test_out):
     """
     preds = net.predict(test_in).flatten()
     diff = np.abs(preds - test_out)
-    ys = diff
-    xs = test_out
-    plt.plot(list(xs), np.array(ys) / np.array(xs), ".")
+    plt.plot(test_out, np.array(diff) / np.array(test_out), ".")
     plt.ticklabel_format(style='plain')
     plt.xlabel("redshift")
     plt.ylabel("rel error")
