@@ -3,17 +3,6 @@ from tensorflow import keras
 import tensorflow.keras.backend as kb
 
 
-def squared_relative_loss(y_actual, y_pred):
-    """
-    Calculates the relative squared error. This should cause a constant relative uncertainty in the predictions.
-    :param y_actual: np.array[1] = Correct output data
-    :param y_pred: np.array[1] = Predicted output data
-    :return: np.array[1] = loss
-    """
-    loss = kb.square((y_actual-y_pred))
-    return loss
-
-
 class Network:
 
     """
