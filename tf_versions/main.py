@@ -75,13 +75,13 @@ def get_reg(net, test_in, test_out):
 
 # only galaxy
 if True:
-    train_in, train_out, test_in, test_out = get_data("GALAXY", 3000, 1000)
+    train_in, train_out, test_in, test_out = get_data("GALAXY", 20000, 3000)
     net = Network()
-    history = net.train(train_in, train_out, val_in=test_in, val_out=test_out, epochs=40, verbose=0)
+    history = net.train(train_in, train_out, val_in=test_in, val_out=test_out, epochs=60, verbose=0)
     # net.model.save("galaxies.h5")
 
     preds = net.predict(test_in)
-    plt.plot(test_out, preds.flatten())
+    plt.plot(test_out, preds.flatten(), "x")
     plt.show()
 
     # plot loss of test data
@@ -92,12 +92,12 @@ if True:
     plt.show()
 
     # plot loss of test data over redshift
-    redshift_error_plot(net, test_in, test_out)
+    #  redshift_error_plot(net, test_in, test_out)
 
     # plot regression over linear part of loss(redshift)
-    reg = get_reg(net, test_in, test_out)
-    reg.plot()
-    reg.residues()
+    #reg = get_reg(net, test_in, test_out)
+    #reg.plot()
+    #reg.residues()
 
 
 # only quasar
