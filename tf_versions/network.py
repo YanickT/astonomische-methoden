@@ -28,10 +28,11 @@ class Network:
             # scale brightness
             keras.layers.Dense(5, activation=tf.nn.leaky_relu),
             # calculate stuff
-            keras.layers.Dense(15, activation=tf.nn.sigmoid, kernel_regularizer=keras.regularizers.l2(l=0.1)),
-            keras.layers.Dense(20, activation=tf.nn.sigmoid, kernel_regularizer=keras.regularizers.l2(l=0.1)),
-            keras.layers.Dense(15, activation=tf.nn.sigmoid, kernel_regularizer=keras.regularizers.l2(l=0.1)),
+            keras.layers.Dense(20, activation=tf.nn.sigmoid),
+            keras.layers.Dense(60, activation=tf.nn.sigmoid),
+            keras.layers.Dense(20, activation=tf.nn.sigmoid),
             keras.layers.Dense(1, activation=tf.nn.sigmoid)
+            # , kernel_regularizer=keras.regularizers.l2(l=0.1)
         ])
 
         self.model.compile(optimizer='adam', loss=squared_relative_loss,
@@ -48,8 +49,7 @@ class Network:
         :return: history of training
         """
         if val_in is not None and val_out is not None:
-            return self.model.fit(input_data, output_data, validation_data=(val_in, val_out), epochs=epochs,
-                                  callbacks=[keras.callbacks.EarlyStopping(monitor="val_loss", patience=2)], **kwargs)
+            return self.model.fit(input_data, output_data, validation_data=(val_in, val_out), epochs=epochs, **kwargs)
         else:
             return self.model.fit(input_data, output_data, epochs=epochs, **kwargs)
 

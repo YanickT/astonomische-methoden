@@ -1,5 +1,7 @@
 # Astonomische Methoden (astronomical methods)
 
+THE NETWORK DOES AT THE MOMENT NOT WORK
+
 This project was created as part of the lecture 'Astronomische Methoden'.
 The aim is to develop a simple neural network which predicts the redshift from the given bands.
 
@@ -14,12 +16,6 @@ Therefore, the network for the quasars was altered. This was done by simply addi
 hidden layers. 
 
 Since the influence in the galaxy network was neglectable it will be ignored for this one.
-
-|          | normal | regularization |
-|----------|--------|----------------|
-| galaxies | ![valloss(redshift)](images/galaxies/normal/linreg_valloss(redshift).png)  |  ![valloss(redshift)](images/galaxies/regularization/linreg_valloss(redshift).png) |
-| quasars  | ![valloss(redshift)](images/quasars/normal/linreg_valloss(redshift).png)  |  ![valloss(redshift)](images/quasars/regularization/linreg_valloss(redshift).png) |
-
 
 ## Loss
 The relative squared error was chosen as loss. 

@@ -39,10 +39,12 @@ def redshift_error_plot(net, test_in, test_out):
     """
     preds = net.predict(test_in).flatten()
     diff = np.abs(preds - test_out)
-    pairs = list(zip(diff.tolist(), test_out.tolist()))
-    pairs.sort(key=lambda x: x[1])
-    ys, xs = tuple(zip(*pairs))
-    plt.plot(xs, ys, ".")
+    #pairs = list(zip(diff.tolist(), test_out.tolist()))
+    #pairs.sort(key=lambda x: x[1])
+    #ys, xs = tuple(zip(*pairs))
+    ys = diff
+    xs = test_out
+    plt.plot(list(xs), np.array(ys) / np.array(xs), ".")
     plt.xlabel("redshift")
     plt.ylabel("error")
     plt.show()
@@ -75,8 +77,12 @@ def get_reg(net, test_in, test_out):
 if True:
     train_in, train_out, test_in, test_out = get_data("GALAXY", 3000, 1000)
     net = Network()
-    history = net.train(train_in, train_out, val_in=test_in, val_out=test_out, epochs=20, verbose=0)
+    history = net.train(train_in, train_out, val_in=test_in, val_out=test_out, epochs=40, verbose=0)
     # net.model.save("galaxies.h5")
+
+    preds = net.predict(test_in)
+    plt.plot(test_out, preds.flatten())
+    plt.show()
 
     # plot loss of test data
     val_loss = history.history["val_loss"]
@@ -95,7 +101,7 @@ if True:
 
 
 # only quasar
-if True:
+if False:
     """
     Use with regularization in Network
     """
