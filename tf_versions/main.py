@@ -3,9 +3,6 @@ import matplotlib.pyplot as plt
 from astroquery.sdss import SDSS
 from network import Network
 
-import pyrror.table as pt
-import pyrror.regression as pr
-
 
 def get_data(class_, n_train=1000, n_test=1000):
     """
@@ -39,49 +36,26 @@ def redshift_error_plot(net, test_in, test_out):
     """
     preds = net.predict(test_in).flatten()
     diff = np.abs(preds - test_out)
-    #pairs = list(zip(diff.tolist(), test_out.tolist()))
-    #pairs.sort(key=lambda x: x[1])
-    #ys, xs = tuple(zip(*pairs))
     ys = diff
     xs = test_out
     plt.plot(list(xs), np.array(ys) / np.array(xs), ".")
+    plt.ticklabel_format(style='plain')
     plt.xlabel("redshift")
-    plt.ylabel("error")
+    plt.ylabel("rel error")
     plt.show()
 
 
-def get_reg(net, test_in, test_out):
-    preds = net.predict(test_in).flatten()
-    diff = np.abs(preds - test_out)
-    pairs = list(zip(diff.tolist(), test_out.tolist()))
-    pairs.sort(key=lambda x: x[1])
-    ys, xs = tuple(zip(*pairs))
-
-    # prepare table for regression
-    tab = pt.Table(column_names=["redshift", "loss"], columns=2)
-
-    # remove first part of the data
-    min_index = np.argmin(np.array(ys))
-    test_out = xs[min_index:]
-    test_in = ys[min_index:]
-
-    for redshift, loss in zip(test_out, test_in):
-        tab.add((redshift, loss))
-
-    # perform regression and plot results
-    reg = pr.SimpleRegression(tab, {'x': 0, 'y': 1})
-    return reg
-
-
 # only galaxy
-if True:
-    train_in, train_out, test_in, test_out = get_data("GALAXY", 20000, 3000)
+if False:
+    train_in, train_out, test_in, test_out = get_data("GALAXY", 10000, 3000)
     net = Network()
     history = net.train(train_in, train_out, val_in=test_in, val_out=test_out, epochs=60, verbose=0)
-    # net.model.save("galaxies.h5")
+    net.model.save("galaxies.h5")
 
     preds = net.predict(test_in)
     plt.plot(test_out, preds.flatten(), "x")
+    plt.xlabel("redshift")
+    plt.ylabel("predicted redshift")
     plt.show()
 
     # plot loss of test data
@@ -92,35 +66,32 @@ if True:
     plt.show()
 
     # plot loss of test data over redshift
-    #  redshift_error_plot(net, test_in, test_out)
-
-    # plot regression over linear part of loss(redshift)
-    #reg = get_reg(net, test_in, test_out)
-    #reg.plot()
-    #reg.residues()
+    redshift_error_plot(net, test_in, test_out)
 
 
 # only quasar
-if False:
+if True:
     """
     Use with regularization in Network
     """
-    train_in, train_out, test_in, test_out = get_data("QSO", 8000, 2000)
+    train_in, train_out, test_in, test_out = get_data("QSO", 10000, 3000)
     net = Network()
-    history = net.train(train_in, train_out, val_in=test_in, val_out=test_out, epochs=15, verbose=0)
-    # net.model.save("quasar.h5")
+    history = net.train(train_in, train_out, val_in=test_in, val_out=test_out, epochs=60, verbose=0)
+    net.model.save("quasar.h5")
 
-    # plot loss of test data over the epochs
+    preds = net.predict(test_in)
+    plt.plot(test_out, preds.flatten(), "x")
+    plt.xlabel("redshift")
+    plt.ylabel("predicted redshift")
+    plt.show()
+
+    # plot loss of test data
     val_loss = history.history["val_loss"]
+    plt.plot(list(range(len(val_loss))), val_loss)
     plt.xlabel("epochs")
     plt.ylabel("validation loss")
-    plt.plot(list(range(len(val_loss))), val_loss)
     plt.show()
 
     # plot loss of test data over redshift
     redshift_error_plot(net, test_in, test_out)
 
-    # plot regression over linear part of loss(redshift)
-    reg = get_reg(net, test_in, test_out)
-    reg.plot()
-    reg.residues()

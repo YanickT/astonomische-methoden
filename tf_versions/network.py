@@ -1,6 +1,5 @@
 import tensorflow as tf
 from tensorflow import keras
-import tensorflow.keras.backend as kb
 
 
 class Network:
@@ -13,21 +12,22 @@ class Network:
         """
         Initialize network.
         """
+        reg = tf.keras.regularizers.l2(l=1e-3)
         self.model = keras.Sequential([
             # scale brightness
             keras.layers.Dense(5, activation=tf.nn.leaky_relu),
             # calculate stuff
-            keras.layers.Dense(25, activation=tf.nn.sigmoid),
-            keras.layers.Dense(50, activation=tf.nn.sigmoid),
-            keras.layers.Dense(50, activation=tf.nn.sigmoid),
-            keras.layers.Dense(25, activation=tf.nn.sigmoid),
+            keras.layers.Dense(15, activation=tf.nn.sigmoid, use_bias=True, kernel_regularizer=reg),
+            keras.layers.Dense(30, activation=tf.nn.sigmoid, use_bias=True, kernel_regularizer=reg),
+            keras.layers.Dense(15, activation=tf.nn.sigmoid, use_bias=True, kernel_regularizer=reg),
+
             keras.layers.Dense(1, activation=tf.nn.leaky_relu)
         ])
 
-        self.model.compile(optimizer='adam', loss=tf.keras.losses.MeanAbsoluteError(),
+        self.model.compile(optimizer='adam', loss=tf.keras.losses.MeanSquaredError(),
                            metrics=[tf.keras.metrics.MeanAbsoluteError()])
 
-    def train(self, input_data, output_data, val_in=None, val_out=None, epochs=5, **kwargs):
+    def train(self, input_data, output_data, val_in=None, val_out=None, epochs=30, **kwargs):
         """
         Train the network.
         :param input_data: np.array[n, 5] = List of input data to train
@@ -37,10 +37,8 @@ class Network:
         :param epochs: int = Number of interactions to train
         :return: history of training
         """
-        if val_in is not None and val_out is not None:
-            return self.model.fit(input_data, output_data, validation_data=(val_in, val_out), epochs=epochs, **kwargs)
-        else:
-            return self.model.fit(input_data, output_data, epochs=epochs, **kwargs)
+        return self.model.fit(input_data, output_data, validation_data=(val_in, val_out), epochs=epochs,
+                              callbacks=[tf.keras.callbacks.EarlyStopping(monitor="val_loss", patience=5)], **kwargs)
 
     def predict(self, input_data):
         """
