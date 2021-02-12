@@ -72,17 +72,6 @@ class Network:
 
         return loss.item()
 
-    def accuracy(self, input_data, output_expected):
-        """
-        Calculates the accuracy for the network.
-        :param input_data: torch.Tensor = Data to test
-        :param output_expected: torch.Tensor = Correct answers for data to test
-        :return: float = accuracy of the network
-        """
-        output_guess = self.network(input_data)
-        predictions = torch.argmax(output_guess, dim=1)
-        return (predictions == output_expected).float().mean()
-
     def predict(self, input_data):
         self.network.eval()
         with torch.no_grad():
