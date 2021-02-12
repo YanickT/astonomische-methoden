@@ -7,7 +7,7 @@ The data were accessed using `astroquery.sdss`.
 
 ## Network
 While the network shows for the galaxies at least a tendency do quasars perform pretty bad.
-Since the amount of data for larger redshifts is smaller, the network trains these less. 
+Since the amount of data for larger redshifts (galaxies) is smaller, the network trains these less. 
 This results in a worse prediction for large redshifts.
 
 |   | Galaxies | Quasars |
