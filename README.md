@@ -14,7 +14,7 @@ This results in a worse prediction for large redshifts.
 |---|----------|---------|
 |Default (tf)| ![predicted redshift over real redshift](images/galaxies/default/prediction_redshift.png)|![predicted redshift over real redshift](images/quasars/default/prediction_redshift.png)| 
 |Modified (tf)| ![predicted redshift over real redshift](images/galaxies/modified/prediction_redshift.png)|![predicted redshift over real redshift](images/quasars/modified/prediction_redshift.png)| 
-
+|Default (torch)  | ![predicted redshift over real redshift](images/torch/galaxies_default/prediction_redshift.png)|![predicted redshift over real redshift](images/torch/quasars_default/prediction_redshift.png)| 
 The default network can be found in the python script. 
 
 The modified network has following changes applied to it.
