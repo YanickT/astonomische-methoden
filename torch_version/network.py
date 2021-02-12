@@ -19,6 +19,7 @@ class Network:
         self.f_loss = F.mse_loss
 
         self.network = nn.Sequential(
+            nn.Linear(5, 5, bias=True),
             nn.LeakyReLU(),
             nn.Linear(5, 15, bias=True),
             nn.Sigmoid(),
