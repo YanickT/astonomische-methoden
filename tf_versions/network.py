@@ -14,7 +14,7 @@ class Network:
         """
         reg = tf.keras.regularizers.l2(l=1e-3)
         self.model = keras.Sequential([
-            # scale brightness
+            # scaling
             keras.layers.Dense(5, activation=tf.nn.leaky_relu),
             # calculate stuff
             keras.layers.Dense(15, activation=tf.nn.sigmoid, use_bias=True, kernel_regularizer=reg),

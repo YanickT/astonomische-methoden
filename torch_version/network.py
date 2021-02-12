@@ -77,7 +77,8 @@ class Network:
         with torch.no_grad():
             return self.network(input_data)
 
-    def early_stop(self, losses):
+    @staticmethod
+    def early_stop(losses):
         return all([losses[0] <= loss for loss in losses]) and len(losses) > 1
 
 

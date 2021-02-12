@@ -82,7 +82,7 @@ if True:
     """
     train_set, test_set = get_data("QSO", 10000, 3000, 100)
     net = Network()
-    val_loss = net.train(60, train_set, test_set)
+    val_loss = net.train(100, train_set, test_set)
 
     xs = []
     ys = []
