@@ -28,6 +28,6 @@ The modified network has following changes applied to it.
 
 
 ## Data
-The data used is from the Sloan Digital Sky Survey (SDSS) DR16. To obtain randomly sampled redshifts the data
+The data used is from the Sloan Digital Sky Survey (SDSS) DR16. The website of SDSS can be found at <https://www.sdss.org/>. To obtain randomly sampled redshifts the data
 is sorted by right ascension before choosing the amount of data sets to download from the top of the list. 
 The object class is resticted depending for which network the training data is used for. 
